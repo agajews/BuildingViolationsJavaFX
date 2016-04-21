@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="BuildingViolations.jnlp">
+  <information>
+    <title>BuildingViolations</title>
+    <vendor>csstudent</vendor>
+    <description>null</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="BuildingViolations.jar" size="4794" download="eager" />
+    <jar href="lib/gson-2.2.2.jar" size="189285" download="eager" />
+  </resources>
+  <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="BuildingViolations" >
+    <param name="requiredFXVersion" value="8.0+"/>
+  </applet-desc>
+  <jfx:javafx-desc  width="800" height="600" main-class="buildingviolations.BuildingViolations"  name="BuildingViolations" />
+  <update check="always"/>
+</jnlp>
