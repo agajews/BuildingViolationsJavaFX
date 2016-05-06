@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.chart.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.*;
 
 /**
@@ -31,46 +32,45 @@ public class FXMLDocumentController implements Initializable {
     private BarChart<String, Number> chart;
     
     @FXML
-    private Slider min;
-    
-    @FXML
-    private Slider max;
+    private TextField tf;
     
     private Map<String, Integer> addresses;
     
-    private void graphData(boolean forward){
-        System.out.println(forward);
+    @FXML
+    private void handleStreet(Event e){
+        graphData(tf.getText());
+    }
+    
+    @FXML
+    private void close(Event e){
+        System.exit(0);
+    }
+    
+    @FXML
+    private void about(Event e){
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("About");
+        alert.setHeaderText("Building Violations Help");
+        String s ="The following is a graph of building violations \nby address. To filter the data, enter a two-digit \nstreet number or a '*' to display all items.";
+        alert.setContentText(s);
+        alert.show();
+    }
+    
+    private void graphData(String street){
+        System.out.println(street);
         addresses = MapUtil.sortByValue(addresses, true);
         List<String> keys = new ArrayList<String>();
         keys.addAll(addresses.keySet());
-        if(forward){
-            Collections.reverse(keys);
-        }
         XYChart.Series<String, Number> violations = new XYChart.Series();
         System.out.println(keys);
-        for (String street : keys){
-            if(addresses.get(street) >= min.getValue() && addresses.get(street) <= max.getValue()){
-                violations.getData().add(new XYChart.Data(street, addresses.get(street)));
+        for (String a : keys){
+            if(a.substring(0, 2).equals(street) || street.equals("*")){
+                violations.getData().add(new XYChart.Data(a, addresses.get(a)));
             }
         }
         chart.getData().clear();
         chart.getData().add(violations);
         
-    }
-    
-    @FXML
-    private void handleChangeFilter(MouseEvent event) {
-        System.out.println("Clicked slider");
-        max.setMin(0);
-        max.setMax(50);
-        min.setMin(0);
-        min.setMax(50);
-        if(max.getValue() > 5){
-            min.setMax(max.getValue()-5);
-        }else{
-            max.setMin(min.getValue()+5);
-        }
-        graphData(true);
     }
     
     @Override
@@ -112,7 +112,17 @@ public class FXMLDocumentController implements Initializable {
                 addresses.put(street, addresses.get(street) + 1);
             }
         }
-        graphData(true);
+        graphData("*");
+        /*cb.setItems(FXCollections.observableArrayList("*", "10"));
+        cb.setValue("*");
+        cb.getSelectionModel().selectedIndexProperty().addListener(new
+            ChangeListener<Number>() {
+                public void changed(ObservableValue ov,
+                    Number value, Number new_value) {
+                        System.out.println(new_value);
+            }
+        });*/
+        tf.setText("*");
     }
     
 }
