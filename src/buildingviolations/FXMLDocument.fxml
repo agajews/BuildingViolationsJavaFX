@@ -3,11 +3,12 @@
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="polioimmunizations.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="buildingviolations.FXMLDocumentController">
    <children>
-      <BarChart fx:id="chart" barGap="2.0" categoryGap="5.0" legendVisible="false" prefHeight="600.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BarChart fx:id="chart" barGap="2.0" categoryGap="5.0" layoutY="43.0" legendVisible="false" prefHeight="557.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="43.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -15,5 +16,7 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </BarChart>
+      <Slider fx:id="min" layoutX="14.0" layoutY="14.0" max="50.0" onMouseReleased="#handleChangeFilter" />
+      <Slider fx:id="max" layoutX="846.0" layoutY="14.0" max="50.0" onMouseReleased="#handleChangeFilter" value="50.0" AnchorPane.rightAnchor="14.0" />
    </children>
 </AnchorPane>

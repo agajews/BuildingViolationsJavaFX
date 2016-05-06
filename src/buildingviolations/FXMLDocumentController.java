@@ -3,17 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package polioimmunizations;
+package buildingviolations;
 
 import buildingviolations.Entry;
+import buildingviolations.MapUtil;
 import com.google.gson.*;
+import com.sun.javafx.collections.ObservableListWrapper;
 import java.net.*;
 import java.util.*;
-import javafx.event.ActionEvent;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.*;
+import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.chart.*;
+import javafx.scene.input.*;
 
 /**
  *
@@ -23,6 +29,49 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private BarChart<String, Number> chart;
+    
+    @FXML
+    private Slider min;
+    
+    @FXML
+    private Slider max;
+    
+    private Map<String, Integer> addresses;
+    
+    private void graphData(boolean forward){
+        System.out.println(forward);
+        addresses = MapUtil.sortByValue(addresses, true);
+        List<String> keys = new ArrayList<String>();
+        keys.addAll(addresses.keySet());
+        if(forward){
+            Collections.reverse(keys);
+        }
+        XYChart.Series<String, Number> violations = new XYChart.Series();
+        System.out.println(keys);
+        for (String street : keys){
+            if(addresses.get(street) >= min.getValue() && addresses.get(street) <= max.getValue()){
+                violations.getData().add(new XYChart.Data(street, addresses.get(street)));
+            }
+        }
+        chart.getData().clear();
+        chart.getData().add(violations);
+        
+    }
+    
+    @FXML
+    private void handleChangeFilter(MouseEvent event) {
+        System.out.println("Clicked slider");
+        max.setMin(0);
+        max.setMax(50);
+        min.setMin(0);
+        min.setMax(50);
+        if(max.getValue() > 5){
+            min.setMax(max.getValue()-5);
+        }else{
+            max.setMin(min.getValue()+5);
+        }
+        graphData(true);
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -53,12 +102,7 @@ public class FXMLDocumentController implements Initializable {
         Gson gson = new Gson();
         Entry[] data = gson.fromJson(str, Entry[].class);
         
-        XYChart.Series<String, Number> violations = new XYChart.Series();
-        chart.setTitle("Building Violations");
-        chart.getXAxis().setLabel("Address");
-        chart.getYAxis().setLabel("# Building Violations");
-        
-        HashMap<String, Integer> addresses = new HashMap<String, Integer>();
+        addresses = new HashMap<String, Integer>();
         for (Entry entry : data){
             String street = entry.getAddress();
             if (addresses.get(street) == null){
@@ -68,14 +112,7 @@ public class FXMLDocumentController implements Initializable {
                 addresses.put(street, addresses.get(street) + 1);
             }
         }
-        for (String street : addresses.keySet()){
-            System.out.println(street + ": " + addresses.get(street));
-            violations.getData().add(new XYChart.Data(street, addresses.get(street)));
-        }
-        
-        chart.getData().add(violations);
-        
-        
-    }    
+        graphData(true);
+    }
     
 }
